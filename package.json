@@ -1,0 +1,29 @@
+{
+  "name": "ecommerce-app",
+  "version": "1.0.0",
+  "description": "Ecommerce applicartion",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Niroshan-Krishnamoorthy/ecommerce-app.git"
+  },
+  "author": "Niroshan Krishnamoorthy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Niroshan-Krishnamoorthy/ecommerce-app/issues"
+  },
+  "homepage": "https://github.com/Niroshan-Krishnamoorthy/ecommerce-app#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.7"
+  }
+}
