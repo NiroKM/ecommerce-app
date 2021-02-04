@@ -1,5 +1,6 @@
 {
   "name": "ecommerce-app",
+  "proxy":"http://localhost:5000",
   "version": "1.0.0",
   "description": "Ecommerce applicartion",
   "main": "server.js",
