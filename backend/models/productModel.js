@@ -29,9 +29,9 @@ const productSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    image :{
-        type:String,
-        required:true
+    image: {
+        type: String,
+        required: true
     },
     brand: {
         type: String,
@@ -63,11 +63,11 @@ const productSchema = mongoose.Schema({
         required: true,
         default: 0
     },
-    CountInStock: {
+    countInStock: {
         type: Number,
         required: true,
         default: 0
-    },
+    }
 }, {
     timestamps: true
 });
