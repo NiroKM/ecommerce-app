@@ -11,15 +11,15 @@ const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body
     const user = await User.findOne({ email })
 
-    if(user && (await user.matchPassword(password))){
+    if (user && (await user.matchPassword(password))) {
         res.json({
-            _id:user._id,
-            name:user.name,
-            email:user.email,
-            isAdmin:user.isAdmin,
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
             token: generateToken(user._id)
         })
-    }else{
+    } else {
         res.status(401);
         throw new Error('Invalid username or password')
     }
@@ -30,11 +30,11 @@ const authUser = asyncHandler(async (req, res) => {
 // @route POST /api/users/
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-    
-    const {name,email,password} = req.body
 
-    const userExists = await User.findOne({email})
-    if(userExists){
+    const { name, email, password } = req.body
+
+    const userExists = await User.findOne({ email })
+    if (userExists) {
         res.status(400)
         throw new Error('User already exist')
     }
@@ -45,15 +45,15 @@ const registerUser = asyncHandler(async (req, res) => {
         password
     })
 
-    if(user){
+    if (user) {
         res.status(201).json({
-            _id:user._id,
-            name:user.name,
-            email:user.email,
-            isAdmin:user.isAdmin,
-            token: generateToken(user._id) 
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            token: generateToken(user._id)
         })
-    }else{
+    } else {
         res.status(400)
         throw new Error('Invalid User data')
     }
@@ -65,14 +65,14 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access Private
 const getUserProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user.id)
-    if(user){
+    if (user) {
         res.json({
-            _id:user._id, 
-            name:user.name,
-            email:user.email,
-            isAdmin:user.isAdmin,
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
         })
-    }else{
+    } else {
         res.status(404)
         throw new Error('User not found')
     }
