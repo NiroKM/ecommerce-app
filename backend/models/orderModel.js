@@ -2,9 +2,10 @@ import mongoose from 'mongoose';
  
 //Individual Order Details
 const orderSchema = mongoose.Schema({
-    name:{
-        type:String,
-        required:true
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:'User'
     },
     orderItems : [
     {
@@ -16,7 +17,7 @@ const orderSchema = mongoose.Schema({
             type:Number,
             required:true
         },
-        img:{
+        image:{
             type:String,
             required:true
         },
@@ -31,7 +32,7 @@ const orderSchema = mongoose.Schema({
         }
     }
     ],
-    shiippingAddress:{
+    shippingAddress:{
         address:{
             type:String,
             required:true
@@ -56,7 +57,7 @@ const orderSchema = mongoose.Schema({
     paymentResult:{
         id:{type:String},
         status:{type:String},
-        update_email:{type:String},
+        update_time:{type:String},
         email_address:{type:String},
     },
     taxPrice:{
