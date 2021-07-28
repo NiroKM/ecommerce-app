@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Button, Col, Row, ListGroup, Image, Card } from 'react-bootstrap'
+import { PayPalButton } from 'react-paypal-button-v2'
+import { Col, Row, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { getOrderDetails, makePayment } from '../actions/orderActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
+import { ORDER_PAY_RESET } from '../constants/orderConstants'
+import { emptyCart } from '../actions/cartActions'
+
 
 
 const OrderScreen = ({ match, history }) => {
 
     const orderId = match.params.id
 
-    const [sdkReady,setSdkReady] = useState(false)
+    const [sdkReady, setSdkReady] = useState(false)
 
     const dispatch = useDispatch()
 
@@ -20,43 +24,46 @@ const OrderScreen = ({ match, history }) => {
     const { order, loading, error } = orderDetails
 
     const orderPay = useSelector(state => state.orderPay)
-    const { loading:loadingPay, success:successPay, error:errorPay } = orderPay
+    const { loading: loadingPay, success: successPay, error: errorPay } = orderPay
 
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
 
-    const paymentHandler = () => {
-        console.log('pay')
-    }
-
     useEffect(() => {
-        const addPaypalScript = async() =>{
-            const {data:clientId} = await axios.get('/api/config/paypal')
+        const addPaypalScript = async () => {
+            const { data: clientId } = await axios.get('/api/config/paypal')
             const script = document.createElement('script')
             script.type = 'text/javascript'
             script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
             script.async = true
-            script.onload = ()=>{
+            script.onload = () => {
                 setSdkReady(true)
             }
             document.body.appendChild(script)
         }
 
         if (userInfo) {
-            if(successPay || !order){
+            if (successPay || !order) {
+                dispatch({ type: ORDER_PAY_RESET })
                 dispatch(getOrderDetails(orderId))
-            }else if(!order.isPaid){
-                if(!window.paypal){
+            } else if (!order.isPaid) {
+                if (!window.paypal) {
                     addPaypalScript()
-                }else{
+                } else {
                     setSdkReady(true)
                 }
             }
         } else {
             history.push(`/login?redirect=order/${orderId}`)
         }
-    }, [dispatch,userInfo,orderId,history,successPay,order])
+    }, [dispatch, userInfo, orderId, history, successPay, order])
+
+
+    const successPaymentHandler = (paymentResult) => {
+        dispatch(makePayment(orderId, paymentResult))
+        dispatch(emptyCart())
+    }
 
     return (
         <div>
@@ -147,9 +154,15 @@ const OrderScreen = ({ match, history }) => {
                                             <Col>${order.totalPrice}</Col>
                                         </Row>
                                     </ListGroup.Item>
-                                    <ListGroup.Item>
-                                        <Button type='button' className='btn-block' onClick={paymentHandler}>Pay</Button>
-                                    </ListGroup.Item>
+                                    {!order.isPaid && (
+                                        <ListGroup.Item>
+                                            {loadingPay && <Loader />}
+                                            {!sdkReady ? <Loader /> : (
+                                                <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler} />
+                                            )}
+                                            {errorPay && <Message varient='danger'>{errorPay}</Message>}
+                                        </ListGroup.Item>
+                                    )}
                                 </ListGroup>
                             </Card>
                         </Col>
