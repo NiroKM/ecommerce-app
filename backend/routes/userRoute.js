@@ -1,11 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { authUser, getUserProfile, registerUser, updateUserProfile } from '../controllers/userController.js'
-import { auth } from '../middleware/authMiddleware.js';
+import { authUser, getAllUsers, getUserProfile, registerUser, updateUserProfile } from '../controllers/userController.js'
+import { auth, isAdmin } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 router.route('/')
-    .post(registerUser)
+    .post(registerUser).get(auth,isAdmin,getAllUsers)
 
 router.post('/login', authUser)
 
