@@ -13,7 +13,10 @@ import {
     USER_DETAIL_EMPTY,
     USER_UPDATE_PROFILE_REQUEST,
     USER_UPDATE_PROFILE_SUCCESS,
-    USER_UPDATE_PROFILE_FAIL
+    USER_UPDATE_PROFILE_FAIL,
+    USER_LIST_REQUEST,
+    USER_LIST_SUCCESS,
+    USER_LIST_FAIL
 } from "../constants/userConstants"
 
 export const login = (email, password) => async (dispatch) => {
@@ -40,7 +43,7 @@ export const login = (email, password) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: USER_LOGIN_FAIL,
-            payload: error.response && error.response.data.message ? error.response.data.message : error.response
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -85,7 +88,7 @@ export const register = (name, email, password) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,
-            payload: error.response && error.response.data.message ? error.response.data.message : error.response
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -118,7 +121,7 @@ export const getUserDetails = (id) => async (dispatch,getState) => {
     } catch (error) {
         dispatch({
             type: USER_DETAIL_FAIL,
-            payload: error.response && error.response.data.message ? error.response.data.message : error.response
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -151,7 +154,42 @@ export const updateUserProfile = (user) => async (dispatch,getState) => {
     } catch (error) {
         dispatch({
             type: USER_UPDATE_PROFILE_FAIL,
-            payload: error.response && error.response.data.message ? error.response.data.message : error.response
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
+        })
+    }
+}
+
+
+
+export const getUsersList = () => async (dispatch,getState) => {
+    try {
+        dispatch({
+            type: USER_LIST_REQUEST
+        })
+
+        const {userLogin} = getState()
+        const {userInfo} = userLogin
+        console.log(userInfo)
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const data = await axios.get(`/api/users`, config)
+
+        dispatch({
+            type: USER_LIST_SUCCESS,
+            payload: data
+        })
+
+
+    } catch (error) {
+        
+        dispatch({
+            type: USER_LIST_FAIL,
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }

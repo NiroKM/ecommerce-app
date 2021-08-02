@@ -22,7 +22,7 @@ export const listProducts = () =>async(dispatch)=>{
     } catch (error) {
         dispatch({
             type:PRODUCT_LIST_ERROR,
-            payload:error.response && error.response.data.message ? error.response.data.message : error.response
+            payload:error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
@@ -41,7 +41,7 @@ export const listProductsDetail = (id) =>async(dispatch)=>{
     } catch (error) {
         dispatch({
             type:PRODUCT_DETAIL_ERROR,
-            payload:error.response && error.response.data.message ? error.response.data.message : error.response
+            payload:error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
 }
