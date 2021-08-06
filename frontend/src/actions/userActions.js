@@ -16,7 +16,13 @@ import {
     USER_UPDATE_PROFILE_FAIL,
     USER_LIST_REQUEST,
     USER_LIST_SUCCESS,
-    USER_LIST_FAIL
+    USER_LIST_FAIL,
+    USER_DELETE_REQUEST,
+    USER_DELETE_SUCCESS,
+    USER_DELETE_FAIL,
+    USER_UPDATE_REQUEST,
+    USER_UPDATE_SUCCESS,
+    USER_UPDATE_FAIL
 } from "../constants/userConstants"
 
 export const login = (email, password) => async (dispatch) => {
@@ -169,7 +175,6 @@ export const getUsersList = () => async (dispatch,getState) => {
 
         const {userLogin} = getState()
         const {userInfo} = userLogin
-        console.log(userInfo)
 
         const config = {
             headers: {
@@ -189,6 +194,77 @@ export const getUsersList = () => async (dispatch,getState) => {
         
         dispatch({
             type: USER_LIST_FAIL,
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
+        })
+    }
+}
+
+export const deleteUserFromList = (id) => async (dispatch,getState) => {
+    try {
+        dispatch({
+            type: USER_DELETE_REQUEST
+        })
+
+        const {userLogin} = getState()
+        const {userInfo} = userLogin
+        console.log(userInfo)
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const data = await axios.delete(`/api/users/${id}`, config)
+
+        dispatch({
+            type: USER_DELETE_SUCCESS,
+            payload:data
+        })
+
+
+    } catch (error) {
+        
+        dispatch({
+            type: USER_UPDATE_FAIL,
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
+        })
+    }
+}
+
+
+export const updateUserFromList = (user) => async (dispatch,getState) => {
+    try {
+        dispatch({
+            type: USER_UPDATE_REQUEST
+        })
+
+        const {userLogin} = getState()
+        const {userInfo} = userLogin
+
+        const config = {
+            headers: {
+                'Content-Type':'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const data = await axios.put(`/api/users/${user._id}`,user, config)
+
+        dispatch({
+            type: USER_UPDATE_SUCCESS,
+        })
+
+        dispatch({
+            type: USER_DETAIL_SUCCESS,
+            payload : data
+        })
+
+
+    } catch (error) {
+        
+        dispatch({
+            type: USER_DELETE_FAIL,
             payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }
