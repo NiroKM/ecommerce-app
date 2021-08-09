@@ -207,7 +207,6 @@ export const deleteUserFromList = (id) => async (dispatch,getState) => {
 
         const {userLogin} = getState()
         const {userInfo} = userLogin
-        console.log(userInfo)
 
         const config = {
             headers: {

@@ -14,14 +14,15 @@ connectDB();
 
 const importData = async () => {
     try {
-        await Order.deleteMany();
+        //await Order.deleteMany();
         await Product.deleteMany();
-        await User.deleteMany();
-        console.log('Data Destroyed!');
+        //await User.deleteMany();
+        //console.log('Data Destroyed!');
         
         console.log('Importing Data!');
-        const createdUsers = await User.insertMany(users);
-        const adminUser = createdUsers[0]._id;
+        //const createdUsers = await User.insertMany(users);
+        const adminUserList =await User.find({isAdmin:true})
+        const adminUser = adminUserList[0]._id;
 
         const sampleProducts = products.map(p => {
             return ({ ...p, user: adminUser })

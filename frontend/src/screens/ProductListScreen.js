@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
-import { Table, Button,Col,Row } from 'react-bootstrap'
+import { Table, Button, Col, Row } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listProducts } from '../actions/productActions'
+import { deleteProductFromList, listProducts } from '../actions/productActions'
 
 
 const ProductListScreen = ({ history }) => {
@@ -16,28 +16,32 @@ const ProductListScreen = ({ history }) => {
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
+    const deleteProduct = useSelector(state => state.deleteProduct)
+    const { success: deleteSuccess } = deleteProduct
+
     useEffect(() => {
         if (userInfo && userInfo.isAdmin) {
             dispatch(listProducts())
         } else {
             history.push('/login')
         }
-    }, [dispatch, history, userInfo])
+    }, [dispatch, history, userInfo, deleteSuccess])
 
     const deleteHandler = (id) => {
         if (window.confirm('Do you want to delete this product')) {
             // DELETE PRODUCT
+            dispatch(deleteProductFromList(id))
         }
     }
 
-    const createProductHandler = (product)=>{
+    const createProductHandler = (product) => {
         //Create Product
         console.log('create product')
     }
 
     return (
         <div>
-            <Row className = 'align-text-center'>
+            <Row className='align-text-center'>
                 <Col>
                     <h1>Products</h1>
                 </Col>
