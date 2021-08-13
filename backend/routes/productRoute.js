@@ -1,12 +1,12 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import {deleteProduct, getProductById,getProducts} from '../controllers/productController.js'
+import {createProduct, deleteProduct, getProductById,getProducts, updateProduct} from '../controllers/productController.js'
 import { auth, isAdmin } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 
-router.route('/').get(getProducts);
-router.route('/:id').get(getProductById).delete(auth,isAdmin,deleteProduct);
+router.route('/').get(getProducts).post(auth,isAdmin,createProduct);
+router.route('/:id').get(getProductById).delete(auth,isAdmin,deleteProduct).put(auth,isAdmin,updateProduct);
 
 
 
