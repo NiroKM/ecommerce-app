@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Table, Button } from 'react-bootstrap'
+import { Table, Button, Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
@@ -29,13 +29,18 @@ const UserListScreen = ({ history }) => {
     }, [dispatch, history, userInfo, deleteSuccess])
 
     const deleteHandler = (id) => {
-        if(window.confirm('Do you want to delet this user')){
+        if (window.confirm('Do you want to delet this user')) {
             dispatch(deleteUserFromList(id))
         }
     }
 
     return (
         <div>
+            <Row className='align-text-center'>
+                <Col>
+                    <h1>Users</h1>
+                </Col>
+            </Row>
             {loading ? <Loader /> : error ? <Message varient='danger'>{error}</Message> : (
                 <Table striped bordered hover responsive className='table-sm'>
                     <thead>

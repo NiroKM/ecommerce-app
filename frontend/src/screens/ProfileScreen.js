@@ -56,8 +56,8 @@ const ProfileScreen = ({ location, history }) => {
             dispatch(updateUserProfile({ id: user._id, name, email, password }))
         }
     }
-    
-    const orderRequestHandler=(id)=>{
+
+    const orderRequestHandler = (id) => {
         dispatch(getOrderDetails(id))
     }
 
@@ -95,41 +95,42 @@ const ProfileScreen = ({ location, history }) => {
             </Col>
             <Col md={9}>
                 <h2>My Orders</h2>
-                {loadingOrders ? <Loader /> : errorOrders ? <Message varient='danger'>{errorOrders}</Message> : (
-                    <Table striped bordered hover responsive className='table-sm'>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>DATE</th>
-                                <th>TOTAL</th>
-                                <th>PAID</th>
-                                <th>DELIVERED</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orders.map(order => (
-                                <tr key={order._id}>
-                                    <td>{order._id}</td>
-                                    <td>{order.createdAt.substring(0, 10)}</td>
-                                    <td>${order.totalPrice}</td>
-                                    <td>{order.isPaid ? 'Paid on ' + order.paidAt.substring(0, 10) : (
-                                        <i className='fas fa-times' style={{ color: 'red' }}></i>
-                                    )}</td>
-                                    <td>{order.isDeleivered ? 'Delivered on ' + order.deliveredAt.substring(0, 10) : (
-                                        <i className='fas fa-times' style={{ color: 'red' }}></i>
-                                    )}</td>
-                                    <td>
-                                        <LinkContainer to={`/order/${order._id}`}>
-                                            <Button onClick={()=>orderRequestHandler(order._id)} className='btn-sm' varient='light'>
-                                                Details
-                                            </Button>
-                                        </LinkContainer>
-                                    </td>
+                {loadingOrders ? <Loader /> : errorOrders ? <Message varient='danger'>{errorOrders}</Message> :
+                    orders.length === 0 ? <Message varient='dark'>You dont have any orders created.</Message> : (
+                        <Table striped bordered hover responsive className='table-sm'>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>DATE</th>
+                                    <th>TOTAL</th>
+                                    <th>PAID</th>
+                                    <th>DELIVERED</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                )}
+                            </thead>
+                            <tbody>
+                                {orders.map(order => (
+                                    <tr key={order._id}>
+                                        <td>{order._id}</td>
+                                        <td>{order.createdAt.substring(0, 10)}</td>
+                                        <td>${order.totalPrice}</td>
+                                        <td>{order.isPaid ? 'Paid on ' + order.paidAt.substring(0, 10) : (
+                                            <i className='fas fa-times' style={{ color: 'red' }}></i>
+                                        )}</td>
+                                        <td>{order.isDeleivered ? 'Delivered on ' + order.deliveredAt.substring(0, 10) : (
+                                            <i className='fas fa-times' style={{ color: 'red' }}></i>
+                                        )}</td>
+                                        <td>
+                                            <LinkContainer to={`/order/${order._id}`}>
+                                                <Button onClick={() => orderRequestHandler(order._id)} className='btn-sm' varient='light'>
+                                                    Details
+                                                </Button>
+                                            </LinkContainer>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    )}
             </Col>
         </Row>
     )
