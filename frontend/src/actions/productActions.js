@@ -11,7 +11,10 @@ import {
     PRODUCT_DELETE_ERROR,
     PRODUCT_CREATE_REQUEST,
     PRODUCT_CREATE_SUCCESS,
-    PRODUCT_CREATE_ERROR
+    PRODUCT_CREATE_ERROR,
+    PRODUCT_UPDATE_REQUEST,
+    PRODUCT_UPDATE_SUCCESS,
+    PRODUCT_UPDATE_ERROR
 } from "../constants/productConstant";
 
 export const listProducts = () =>async(dispatch)=>{
@@ -108,6 +111,37 @@ export const createNewProduct = () => async(dispatch,getState)=>{
     } catch (error) {
         dispatch({
             type:PRODUCT_CREATE_ERROR,
+            payload:error.response && error.response.data.message ? error.response.data.message : error.message
+        })
+    }
+}
+
+export const updateSelectedProduct = (product) => async(dispatch,getState)=>{
+    try {
+        dispatch({
+            type:PRODUCT_UPDATE_REQUEST
+        })
+
+        const {userLogin} = getState()
+        const {userInfo} = userLogin
+
+        const config = {
+            headers:{
+                'Content-Type':'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const data = await axios.put(`/api/products/${product._id}`,product,config)
+        
+        dispatch({
+            type:PRODUCT_UPDATE_SUCCESS,
+            payload:data.data
+        })
+
+    } catch (error) {
+        dispatch({
+            type:PRODUCT_UPDATE_ERROR,
             payload:error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }

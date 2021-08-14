@@ -11,10 +11,15 @@ import {
     PRODUCT_CREATE_REQUEST,
     PRODUCT_CREATE_SUCCESS,
     PRODUCT_CREATE_ERROR,
-    PRODUCT_CREATE_RESET
+    PRODUCT_CREATE_RESET,
+    PRODUCT_UPDATE_REQUEST,
+    PRODUCT_UPDATE_SUCCESS,
+    PRODUCT_UPDATE_ERROR,
+    PRODUCT_UPDATE_RESET,
+    PRODUCT_DETAIL_RESET
 } from "../constants/productConstant";
 
-export const productListReducer = (state = {products:[]}, action) => {
+export const productListReducer = (state = { products: [] }, action) => {
     switch (action.type) {
         case PRODUCT_LIST_REQUEST:
             return { loading: true, products: [] };
@@ -28,7 +33,7 @@ export const productListReducer = (state = {products:[]}, action) => {
 }
 
 
-export const productDetailReducer = (state = {product:{reviews:[]}}, action) => {
+export const productDetailReducer = (state = { product: { reviews: [] } }, action) => {
     switch (action.type) {
         case PRODUCT_DETAIL_REQUEST:
             return { loading: true, ...state };
@@ -36,6 +41,8 @@ export const productDetailReducer = (state = {product:{reviews:[]}}, action) => 
             return { loading: false, product: action.payload };
         case PRODUCT_DETAIL_ERROR:
             return { loading: false, error: action.payload };
+        case PRODUCT_DETAIL_RESET:
+            return { product: { reviews: [] } }
         default:
             return state;
     }
@@ -45,7 +52,7 @@ export const productDetailReducer = (state = {product:{reviews:[]}}, action) => 
 export const productDeleteReducer = (state = {}, action) => {
     switch (action.type) {
         case PRODUCT_DELETE_REQUEST:
-            return { loading: true};
+            return { loading: true };
         case PRODUCT_DELETE_SUCCESS:
             return { loading: false, success: true };
         case PRODUCT_DELETE_ERROR:
@@ -59,13 +66,29 @@ export const productDeleteReducer = (state = {}, action) => {
 export const productCreateReducer = (state = {}, action) => {
     switch (action.type) {
         case PRODUCT_CREATE_REQUEST:
-            return { loading: true};
+            return { loading: true };
         case PRODUCT_CREATE_SUCCESS:
             return { loading: false, success: true, product: action.payload };
         case PRODUCT_CREATE_ERROR:
             return { loading: false, error: action.payload };
         case PRODUCT_CREATE_RESET:
             return {}
+        default:
+            return state;
+    }
+}
+
+
+export const productUpdateReducer = (state = { product: {} }, action) => {
+    switch (action.type) {
+        case PRODUCT_UPDATE_REQUEST:
+            return { loading: true };
+        case PRODUCT_UPDATE_SUCCESS:
+            return { loading: false, success: true, product: action.payload };
+        case PRODUCT_UPDATE_ERROR:
+            return { loading: false, error: action.payload };
+        case PRODUCT_UPDATE_RESET:
+            return { product: {} }
         default:
             return state;
     }
