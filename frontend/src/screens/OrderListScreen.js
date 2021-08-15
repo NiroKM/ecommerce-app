@@ -71,7 +71,7 @@ const OrderListScreen = ({ history }) => {
                                             Details
                                         </Button>
                                     </LinkContainer>
-                                    <a> </a>
+                                    <span> </span>
                                     <Button variant={'danger'} className='btn-sm' onClick={() => deleteHandler(order._id)}>
                                         <i className='fas fa-trash'></i>
                                     </Button>

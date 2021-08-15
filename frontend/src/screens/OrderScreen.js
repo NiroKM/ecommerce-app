@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { PayPalButton } from 'react-paypal-button-v2'
-import { Col, Row, ListGroup, Image, Card } from 'react-bootstrap'
+import { Col, Row, ListGroup, Image, Card,Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { getOrderDetails, makePayment } from '../actions/orderActions'
+import { getOrderDetails, makeDeliver, makePayment } from '../actions/orderActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { ORDER_PAY_RESET } from '../constants/orderConstants'
+import { ORDER_DELIVER_RESET, ORDER_PAY_RESET } from '../constants/orderConstants'
 import { emptyCart } from '../actions/cartActions'
 
 
@@ -25,6 +25,9 @@ const OrderScreen = ({ match, history }) => {
 
     const orderPay = useSelector(state => state.orderPay)
     const { loading: loadingPay, success: successPay, error: errorPay } = orderPay
+
+    const orderDeliver = useSelector(state => state.orderDeliver)
+    const { loading: loadingDeliver, success: successDeliver, error: errorDeliver } = orderDeliver
 
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
@@ -44,8 +47,9 @@ const OrderScreen = ({ match, history }) => {
         }
 
         if (userInfo) {
-            if (successPay || !order) {
+            if (successPay || !order || successDeliver) {
                 dispatch({ type: ORDER_PAY_RESET })
+                dispatch({ type: ORDER_DELIVER_RESET})
                 dispatch(getOrderDetails(orderId))
             } else if (!order.isPaid) {
                 if (!window.paypal) {
@@ -57,12 +61,17 @@ const OrderScreen = ({ match, history }) => {
         } else {
             history.push(`/login?redirect=order/${orderId}`)
         }
-    }, [dispatch, userInfo, orderId, history, successPay, order])
+    }, [dispatch, userInfo, orderId, history, successPay, order, successDeliver])
 
 
     const successPaymentHandler = (paymentResult) => {
         dispatch(makePayment(orderId, paymentResult))
         dispatch(emptyCart())
+    }
+
+    const deliverHandler = (id)=>{
+        //deliver order
+        dispatch(makeDeliver(id))
     }
 
     return (
@@ -161,6 +170,15 @@ const OrderScreen = ({ match, history }) => {
                                                 <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler} />
                                             )}
                                             {errorPay && <Message varient='danger'>{errorPay}</Message>}
+                                        </ListGroup.Item>
+                                    )}
+                                    {loadingDeliver && <Loader/>}
+                                    {errorDeliver && <Message varient='danger'>{errorDeliver}</Message>}
+                                    {userInfo && userInfo.isAdmin && order.isPaid && !order.isDeleivered &&(
+                                        <ListGroup.Item>
+                                            <Button type='button' className='btn btn-block' onClick={()=>deliverHandler(orderId)}>
+                                                Mark As Delivered
+                                            </Button>
                                         </ListGroup.Item>
                                     )}
                                 </ListGroup>
