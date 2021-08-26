@@ -7,6 +7,8 @@ import { Loader } from '../components/Loader'
 import Message from '../components/Message'
 import Paginate from '../components/Paginate'
 import ProductCarousel from '../components/ProductCarousel'
+import Meta from '../components/Meta'
+import { Link } from 'react-router-dom'
 
 
 
@@ -24,8 +26,10 @@ const HomeScreen = ({ match }) => {
     }, [dispatch, keyword, pageNumber])
 
     return (
+        <>
+        <Meta/>
         <div>
-            {!keyword && <ProductCarousel/>}
+            {!keyword ? <ProductCarousel/>:(<Link className='btn btn-dark my-3' to='/'>Go Back</Link>)}
             <h1>Latest Products</h1>
             {loading ? <Loader />
                 : error ? <Message varient='danger'>{error}</Message>
@@ -43,6 +47,7 @@ const HomeScreen = ({ match }) => {
             }
 
         </div>
+        </>
     )
 }
 

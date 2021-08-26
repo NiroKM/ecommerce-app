@@ -7,6 +7,7 @@ import { Loader } from '../components/Loader'
 import Message from '../components/Message'
 import { createProductReviewAction, listProductsDetail } from '../actions/productActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstant'
+import Meta from '../components/Meta'
 
 
 
@@ -58,6 +59,7 @@ const ProductScreen = ({ history, match }) => {
                 : error ? <Message varient='danger'>{error}</Message>
                     : (
                         <>
+                        <Meta title={product.name}/>
                             <Row>
                                 <Col md={4}>
                                     <Image src={product.image} alt={product.name} fluid></Image>
